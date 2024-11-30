@@ -81,7 +81,7 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    fetch("http://localhost:8080/records/requestCounts")
+    fetch("https://backimps-production.up.railway.app/records/requestCounts")
       .then((response) => response.json())
       .then((data) => {
         setStatistics((prevState) => ({
@@ -113,7 +113,7 @@ const Dashboard = () => {
       },
     };
 
-    fetch("http://localhost:8080/records/all", requestOptions)
+    fetch("https://backimps-production.up.railway.app/records/all", requestOptions)
       .then((response) => response.json())
       .then((data) => {
         setValues(data);
@@ -149,7 +149,7 @@ const Dashboard = () => {
     };
   
     // Fetch all records from the backend
-    fetch(`http://localhost:8080/records/all`, requestOptions)
+    fetch(`https://backimps-production.up.railway.app/records/all`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -273,11 +273,11 @@ const statusBodyTemplate = (rowData) => {
         </div>
 
         <div id="pendingTable">
-            <DataTable value={values} scrollable scrollHeight="20vw" header={header} globalFilterFields={['userID', 'requestID', 'fileName', 'requestDate']}
+            <DataTable value={values} scrollable scrollHeight="20vw" header={header} globalFilterFields={['requestersName', 'requestID', 'fileName', 'requestDate']}
                 filters={filters} emptyMessage="No records found."
                 paginator rows={8}
                 tableStyle={{ minWidth: '20vw' }} selectionMode="single">
-                <Column field="userID" header="User ID"></Column>
+                <Column field="requestersName" header="Requester's Name"></Column>
                 <Column field="requestID" header="Request ID"sortable></Column>
                 <Column field="fileType" header="File Type"sortable></Column>
                 <Column field="fileName" header="File Name"></Column>
