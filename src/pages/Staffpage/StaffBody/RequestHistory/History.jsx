@@ -237,7 +237,6 @@ const History = ({reqHistory}) => {
         return (
             <div id="historyHeader" className="flex">
                 <h1 style={{color: '#fff'}} id='commentHeader'>Comments</h1>
-                <button id='addComment' className={commentDisabled} onClick={handleAddComment}>+</button>
             </div>
         );
     };
@@ -314,8 +313,7 @@ const History = ({reqHistory}) => {
                     } else if (data['status'] === 'Completed') {
                         setStatus('Ready to Claim');
                         setStatusClass('capsuleCompleted');
-                    } 
-                    else if (data['status'] === 'Claimed') {
+                    } else if (data['status'] === 'Claimed') {
                         setStatus('Claimed');
                         setStatusClass('capsuleClaimed');
                     } 

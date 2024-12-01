@@ -48,7 +48,10 @@ const ForgotPassContent = () => {
                     };
                   fetch("https://backimps-production.up.railway.app/services/ForgotPasswordStep1"  + "?email=" + email, requestOptions2).then((response)=> response.json()
                   ).then((data) => {if(data===true){
-                    setShow1('inactive-step'); setShow2('active-step');}
+                    setShow1('inactive-step'); 
+                    setShow2('active-step');
+                    infoPop('A token has been sent to your email. Please check your inbox.');
+                  }
                   else{
                       infoPop('Failed to send password reset token to your email. Try again.');
                   }})
@@ -83,6 +86,7 @@ const ForgotPassContent = () => {
               if(data === true){
                 setContainer('fp-container2');
                 setShow2('inactive-step'); setShow3('active-step');
+                infoPop('Token verified! Please set your new password.');
               }else{
                 infoPop("That doesn't seem to be the right token.");
               }})
@@ -106,13 +110,16 @@ const ForgotPassContent = () => {
         },
         };
             fetch("https://backimps-production.up.railway.app/services/ForgotPasswordStep3"  + "?password=" + password + "&email=" + email + "&token=" + token, requestOptions).then((response)=> response.json()
-            ).then((data) => {console.log(data);})
+            ).then((data) => {
+              console.log(data);
+              infoPop('Password changed successfully!');
+            })
             .catch(error =>
               {
                   console.log(error);
               }
           );
-            navigate('/');
+
             }else{
                 infoPop("Please make sure that your passwords match!");
             }

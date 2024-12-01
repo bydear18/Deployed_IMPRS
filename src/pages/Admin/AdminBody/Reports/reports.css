@@ -76,11 +76,11 @@
 }
 
 .p-datatable-striped tbody tr:nth-child(5) {
-  background-color:#a5fd6a;
+  background-color:yellow;
   color: #000000;
 }
 
 .p-datatable-striped tbody tr:nth-child(6) {
-  background-color:#bc0c0c;
+  background-color:#c81515;
   color: #000000;
 }

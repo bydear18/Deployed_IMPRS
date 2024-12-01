@@ -254,16 +254,22 @@ const RegisterBody = () => {
 
                     {/* Second Column */}
                     <div className="column">
-                        <label>
-                            <HiIdentification />
-                            <input
-                                className="regShad"
-                                type="text"
-                                value={schoolId}
-                                onChange={(e) => setSchoolId(e.target.value)}
-                                placeholder="School ID"
-                            />
-                        </label>
+                    <label>
+                        <HiIdentification />
+                        <input
+                            className="regShad"
+                            type="text"
+                            value={schoolId}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (/^\d*$/.test(value)) {
+                                    setSchoolId(value); // Update only if input is numeric
+                                }
+                            }}
+                            placeholder="School ID"
+                        />
+                    </label>
+
                         <label htmlFor="employeeType"></label>
                         <select
                                 style={{fontSize: '.85em', marginLeft: '1.5vw'}}

@@ -81,7 +81,7 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    fetch("https://backimps-production.up.railway.app/records/requestCounts")
+    fetch("http://localhost:8080/records/requestCounts")
       .then((response) => response.json())
       .then((data) => {
         setStatistics((prevState) => ({
@@ -113,7 +113,7 @@ const Dashboard = () => {
       },
     };
 
-    fetch("https://backimps-production.up.railway.app/records/all", requestOptions)
+    fetch("http://localhost:8080/records/all", requestOptions)
       .then((response) => response.json())
       .then((data) => {
         setValues(data);
@@ -149,7 +149,7 @@ const Dashboard = () => {
     };
   
     // Fetch all records from the backend
-    fetch(`https://backimps-production.up.railway.app/records/all`, requestOptions)
+    fetch(`http://localhost:8080/records/all`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -213,13 +213,13 @@ const statusBodyTemplate = (rowData) => {
 
 
   return (
-    <div id='dashboardPage' style={{height: '40vw' }}>
+    <div>
       <div className="dashboard-container">
         <div className="box-container">
           {/* Request status boxes */}
           <div className="box" onClick={() => handleBoxClick('Approved for Printing')}>
             <div className="content-box">
-              <FaCheckCircle style={{ color: '#4a90e2' }} className="icon" />
+              <FaCheckCircle style={{ color: '#1672d4' }} className="icon" />
               <p className="box-text">Approved for Printing</p>
             </div>
             <div className="extra-box">
@@ -231,7 +231,7 @@ const statusBodyTemplate = (rowData) => {
 
           <div className="box" onClick={() => handleBoxClick('Waiting for Approval')}>
             <div className="content-box">
-              <FaCheckCircle style={{ color: '#c04a27' }} className="icon" />
+              <FaCheckCircle style={{ color: 'rgb(240, 158, 34)' }} className="icon" />
               <p className="box-text">Waiting for Approval</p>
             </div>
             <div className="extra-box">
@@ -243,7 +243,7 @@ const statusBodyTemplate = (rowData) => {
 
           <div className="box" onClick={() => handleBoxClick('Ready to Claim')}>
             <div className="content-box">
-              <FaCheckCircle style={{ color: '#08af5c' }} className="icon" />
+              <FaCheckCircle style={{ color: 'yellow' }} className="icon" />
               <p className="box-text">Ready to Claim</p>
             </div>
             <div className="extra-box">
@@ -253,7 +253,7 @@ const statusBodyTemplate = (rowData) => {
 
           <div className="box" onClick={() => handleBoxClick('Claimed')}>
             <div className="content-box">
-              <FaCheckCircle style={{ color: '#0a753f' }} className="icon" />
+              <FaCheckCircle style={{ color: '#155724' }} className="icon" />
               <p className="box-text">Claimed</p>
             </div>
             <div className="extra-box">
@@ -277,7 +277,7 @@ const statusBodyTemplate = (rowData) => {
                 filters={filters} emptyMessage="No records found."
                 paginator rows={8}
                 tableStyle={{ minWidth: '20vw' }} selectionMode="single">
-                <Column field="requestersName" header="Requester's name"></Column>
+                <Column field="requestersName" header="Requester's Name"></Column>
                 <Column field="requestID" header="Request ID"sortable></Column>
                 <Column field="fileType" header="File Type"sortable></Column>
                 <Column field="fileName" header="File Name"></Column>

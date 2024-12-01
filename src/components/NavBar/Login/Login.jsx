@@ -11,24 +11,41 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
+    const [role, setRole] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoggedIn, setLoggedIn] = useState(false);
-    const [alert, setAlert] = useState('hide');
-    const [alertMsg, setAlertMsg] = useState('');
-    const navigate = useNavigate()
+    const [alert, setAlert] = useState('hide'); // controls the visibility of the pop-up
+    const [alertMsg, setAlertMsg] = useState(''); // stores the message to be displayed
+    const navigate = useNavigate();
 
-    const infoPop =(message) => {
+    // Info pop-up message display function
+    const infoPop = (message) => {
         setAlert('show');
         setAlertMsg(message);
-    }
+    };
 
+    // Closes the info pop-up
     const closeInfoPop = () => {
       setAlert('hide');
-    }
+      console.log(role);
+      if(role === 'admin'){
+        navigate('/admin');
+      } else if(role === 'head'){
+        navigate('/head');
+      } else if(role === 'staff'){
+        navigate('/staff')
+      } else if(role === 'Office Employee'){
+        navigate('/home')
+      } else if(role === 'Faculty Employee'){
+        navigate('/home');
+      } else{
+        navigate('/');
+      }
+    };
 
+    // Handles the login process
     const handleLogin = () => {
-      localStorage.setItem("email", email);
       const requestOptions = {
           method: 'GET',
           mode: 'cors',
@@ -36,21 +53,21 @@ const Login = () => {
               'Content-Type': 'application/json',
           },
       };
-  
+
       fetch("https://backimps-production.up.railway.app/services/userLogin?email=" + email + "&password=" + password, requestOptions)
           .then((response) => response.json())
           .then((data) => {
               if (data.status === true) {
                   localStorage.setItem("email", email);
-  
+
                   const isAdmin = data['role'] === 'admin';
                   const isHead = data['role'] === 'head';
                   const isStaff = data['role'] === 'staff';
-  
+
                   localStorage.setItem("isAdmin", isAdmin);
                   localStorage.setItem("isHead", isHead);
                   localStorage.setItem("isStaff", isStaff);
-  
+
                   fetch("https://backimps-production.up.railway.app/services/getname?email=" + email, requestOptions)
                       .then((response) => response.json())
                       .then((data) => {
@@ -60,37 +77,38 @@ const Login = () => {
                           localStorage.setItem("role", data['role']);
                           localStorage.setItem("college", data['college']);
                           localStorage.setItem("accType", data['accType']);
-                          
-                          
+
                           fetch("https://backimps-production.up.railway.app/services/getid?email=" + email, requestOptions)
-                          .then((response) => response.json())
-                          .then((data) => {
-                              localStorage.setItem("userID", data['userID']);
-                            
-                              if (data['adminVerified'] === false) {
-                                  infoPop('Your account is not yet accepted by the admin');
+                              .then((response) => response.json())
+                              .then((data) => {
+                                  localStorage.setItem("userID", data['userID']);
                                   
-                              } else {
-                                localStorage.setItem("isLoggedIn", true);
-                                if (data['role'] === 'admin') {
-                                  navigate('/admin');
-                                } else if (data['role'] === 'head') {
-                                    navigate('/head');
-                                } else if (data['role'] === 'staff') {
-                                    navigate('/staff');
-                                } else if (data['role'] === 'Faculty Employee' || data['role'] === 'Office Employee') {
-                                    localStorage.setItem("department", data['department']);
-                                    localStorage.setItem("schoolId", data['schoolId']);
-                                    localStorage.setItem("college", data['college']);
-                                    localStorage.setItem("office", data['office']);
-                                    navigate('/home');
-                                }
-                              }
-                          })
-                          .catch(error => {
-                              console.log(error);
-                          });
-                      
+                                  if (data['adminVerified'] === false) {
+                                      infoPop('Your account is not yet accepted by the admin');
+                                  } else {
+                                    localStorage.setItem("isLoggedIn", true);
+                                    if (data['role'] === 'admin') {
+                                      setRole(data['role']);
+                                      infoPop('Successfully Login!');
+                                    } else if (data['role'] === 'head') {
+                                      setRole(data['role']);
+                                      infoPop('Successfully Login!');
+                                    } else if (data['role'] === 'staff') {
+                                      setRole(data['role']);
+                                      infoPop('Successfully Login!');
+                                    } else if (data['role'] === 'Faculty Employee' || data['role'] === 'Office Employee') {
+                                        localStorage.setItem("department", data['department']);
+                                        localStorage.setItem("schoolId", data['schoolId']);
+                                        localStorage.setItem("college", data['college']);
+                                        localStorage.setItem("office", data['office']);
+                                        setRole(data['role']);
+                                        infoPop('Successfully Login!');
+                                    }
+                                  }
+                              })
+                              .catch(error => {
+                                  console.log(error);
+                              });
                       })
                       .catch(error => {
                           console.log(error);
@@ -104,31 +122,29 @@ const Login = () => {
               console.log(error);
           });
   };
-  
-  
+
   const handleClear = () => {
     setEmail('');
     setPassword('');
   };
-  
+
   const handleRegister = () => {
     navigate("/register");
   }
 
-
   useEffect(() => {
-    if(localStorage.getItem("isLoggedIn")==="true"){
+    if(localStorage.getItem("isLoggedIn") === "true"){
         navigate("/home");
     }
-  });
+  }, [navigate]);
 
-    return (
+  return (
     <div className='main section'>
-      <div id="infoPopOverlay" className ={alert}></div>
+      <div id="infoPopOverlay" className={alert}></div>
       <div id="infoPop" className={alert}>
           <p>{alertMsg}</p>
           <button id='infoChangeBtn' onClick={closeInfoPop}>Close</button>
-        </div>
+      </div>
       <div className='title'>
         <h1 style={{color: '#8f271a'}}>INSTRUCTIONAL MATERIAL PRINTING REQUEST</h1>
       </div>
@@ -165,7 +181,6 @@ const Login = () => {
                 Clear Entities
                 </button>
                 <button className='register-btn' type="button" onClick={handleRegister}>Register</button>
-
             </div>
             
             <div className='fpass'>
@@ -176,11 +191,8 @@ const Login = () => {
         
       </div>
       <div className='cit-bglogo'></div>
-        
     </div>
-
-    
-    )
+  );
 };
 
 export default Login;

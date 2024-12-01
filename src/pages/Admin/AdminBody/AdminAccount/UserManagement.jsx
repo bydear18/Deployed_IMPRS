@@ -83,6 +83,7 @@ const UserManagement = () => {
             showInfoPop('Failed to fetch data. Please try again later.');
         });
 };
+
   const closeInfoPop = () => {
     setAlert('hide');
     if (success) {
@@ -450,15 +451,21 @@ const UserManagement = () => {
                       />
                     </label>
                     <label>
-                      <HiIdentification />
-                      <input
-                        className="regShad"
-                        type="text"
-                        value={schoolId}
-                        onChange={(e) => setSchoolId(e.target.value)}
-                        placeholder="School ID"
-                      />
+                        <HiIdentification />
+                        <input
+                            className="regShad"
+                            type="text"
+                            value={schoolId}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (/^\d*$/.test(value)) {
+                                    setSchoolId(value); // Update only if input is numeric
+                                }
+                            }}
+                            placeholder="School ID"
+                        />
                     </label>
+
                   </div>
                 </div>
 

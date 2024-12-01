@@ -25,6 +25,7 @@ const Navbar = () => {
     const [changed, setChanged] = useState(false);
     const [infoStep, setInfoStep] = useState(0);
     const [disabled, setDisabled] = useState(true);
+    const [success, setSuccess] = useState(false);
     const [firstName, setFirstName] = useState(localStorage.getItem("firstName"));
     const [role, setRole] = useState(localStorage.getItem("role"));
     const [lastName, setLastName] = useState(localStorage.getItem("lastName"));
@@ -34,15 +35,11 @@ const Navbar = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
     const [infoText, setInfoText] = useState('Change Information');
-    const infoPop =(message) => {
+    
+    const infoPop = (message) => {
         setAlert('show');
         setAlertMsg(message);
-    }
-
-    const closeInfoPop = () => {
-      setAlert('hide');
-    }
-
+    };
 
     useEffect(() => {
         const userID = localStorage.getItem("userID");
@@ -64,19 +61,49 @@ const Navbar = () => {
         }
     }, []);
 
-    // Modal management
-    const handleUserIconClick = () => setIsModalOpen(true);
-    const closeModal = () => {
-        setIsModalOpen(false);
-      };
-    
+    const fetchData = () => {
+        fetch('https://backimps-production.up.railway.app/services/all')
+            .then((response) => response.json())
+            .then((data) => {
+                const filteredUsers = data.filter(user => user.role === 'staff' || user.role === 'Faculty Employee' || user.role === 'Office Employee' || user.role === 'admin' || user.role === 'head');
+                setValues(filteredUsers);
+            })
+            .catch((error) => {
+                console.error('Error fetching staff list:', error);
+                showInfoPop('Failed to fetch data. Please try again later.');
+            });
+    };
 
-    // Alert management
+    // Define the showAlertMessage function
     const showAlertMessage = (message) => {
         setAlertMsg(message);
         setShowAlert(true);
     };
-    const closeAlert = () => setShowAlert(false);
+
+    // Modal management
+    const handleUserIconClick = () => setIsModalOpen(true);
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        
+    };
+
+    const showInfoPop = (message, isSuccess = false) => {
+        setAlert('show');
+        setAlertMsg(message);
+        setSuccess(isSuccess);
+    };
+
+    const closeInfoPop = () => {
+        setAlert('hide');
+        if (success) {
+            window.location.reload();
+        } else {
+            setTimeout(() => {
+                fetchData();
+            }, 1000);
+        }
+    };
 
     // Log out function
     const handleLogOut = () => {
@@ -101,11 +128,13 @@ const Navbar = () => {
             }
         }
     };
+
     const passwordPrompt = () => {
         setInfoStep(3);
         setToConfirm('show');
         setShow('show');
-    }
+    };
+
     const handleProceed = () => {
         if (infoStep === 2) {
             // Logic for handling info changes
@@ -139,19 +168,33 @@ const Navbar = () => {
             }
         } else if (infoStep === 3) {
             if (confirmPass === newPassword) {
+                console.log(confirmPass);
                 // Change password logic
                 const requestOptions = {
-                    method: 'POST',
+                    method: 'PUT',
                     mode: 'cors',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: userInfo.email,
+                        firstName: userInfo.firstName,
+                        lastName: userInfo.lastName,
+                        schoolId: userInfo.schoolId,
+                        password: userInfo.Password,
+                    }),
                 };
-                fetch(`https://backimps-production.up.railway.app/services/newPassword?email=${localStorage.getItem("email")}&password=${newPassword}`, requestOptions)
-                    .then(() => {
-                        setInfoStep(0);
+
+                fetch(`https://backimps-production.up.railway.app/services/newPassword?firstName=${firstName}&lastName=${lastName}&password=${password}&email=${email}&schoolId=${schoolId}&role=${role}`, requestOptions)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        showInfoPop('Password changed successfully!', true);
                         closeModal();
-                        window.location.reload();
                     })
-                    .catch(console.error);
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        showInfoPop('An error occurred while updating the staff.');
+                    });
             } else {
                 showAlertMessage('Please ensure your passwords match!');
             }
@@ -160,15 +203,14 @@ const Navbar = () => {
 
     return (
         <div className='navBar flex'>
-            
+                               <div id="infoPopOverlay" className={alert}></div>
+                        <div id="infoPop" className={alert}>
+                        <p>{alertMsg}</p>
+                        <button id="infoChangeBtn" onClick={closeInfoPop}>Close</button>
+                        </div>     
             {isModalOpen && (
                 <div id='modalOverlay'>
-                    <div id='accWhole'  style={{marginTop: '-2vw'}}>
-                        <div id="infoPopOverlay" className={alert}></div>
-                        <div id="infoPop" className={alert}>
-                            <p>{alertMsg}</p>
-                            <button id='infoChangeBtn' onClick={closeInfoPop}>Close</button>
-                        </div>
+                        <div id='accWhole'  style={{marginTop: '-2vw'}}>
                         <div id='accCont'>
                             <button id='closeBtn' onClick={closeModal}>Close</button>
                             <button id='dent' onClick={passwordPrompt}>Change Password</button>

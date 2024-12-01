@@ -219,7 +219,7 @@ const statusBodyTemplate = (rowData) => {
           {/* Request status boxes */}
           <div className="box" onClick={() => handleBoxClick('Approved for Printing')}>
             <div className="content-box">
-              <FaCheckCircle style={{ color: '#4a90e2' }} className="icon" />
+              <FaCheckCircle style={{ color: '#1672d4' }} className="icon" />
               <p className="box-text">Approved for Printing</p>
             </div>
             <div className="extra-box">
@@ -231,7 +231,7 @@ const statusBodyTemplate = (rowData) => {
 
           <div className="box" onClick={() => handleBoxClick('Waiting for Approval')}>
             <div className="content-box">
-              <FaCheckCircle style={{ color: '#c04a27' }} className="icon" />
+              <FaCheckCircle style={{ color: 'rgb(240, 158, 34)' }} className="icon" />
               <p className="box-text">Waiting for Approval</p>
             </div>
             <div className="extra-box">
@@ -243,7 +243,7 @@ const statusBodyTemplate = (rowData) => {
 
           <div className="box" onClick={() => handleBoxClick('Ready to Claim')}>
             <div className="content-box">
-              <FaCheckCircle style={{ color: '#08af5c' }} className="icon" />
+              <FaCheckCircle style={{ color: 'yellow' }} className="icon" />
               <p className="box-text">Ready to Claim</p>
             </div>
             <div className="extra-box">
@@ -253,7 +253,7 @@ const statusBodyTemplate = (rowData) => {
 
           <div className="box" onClick={() => handleBoxClick('Claimed')}>
             <div className="content-box">
-              <FaCheckCircle style={{ color: '#0a753f' }} className="icon" />
+              <FaCheckCircle style={{ color: '#155724' }} className="icon" />
               <p className="box-text">Claimed</p>
             </div>
             <div className="extra-box">

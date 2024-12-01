@@ -51,15 +51,14 @@
 }
 
 #deetCommentBody{
-    top:4vw;
+    top:9vw;
     position:absolute;
-    margin-left: 12vw;
+    margin-left: 22vw;
     width:36vw;
     height:25vw;
     padding:2.5%;
     z-index:4;
     background: linear-gradient(to bottom, #F2D5EF, #B3DDC4);
-
     border-radius: 1vw !important;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
 }
