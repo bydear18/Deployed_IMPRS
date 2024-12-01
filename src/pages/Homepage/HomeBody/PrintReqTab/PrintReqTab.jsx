@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import storage from '../../../../firebase';
 
 function PrintReq({ onRequestSubmitted }) {
-    
     const copies = new RegExp(/^\d{1,4}$/);
 
     const [alert, setAlert] = useState('hide');
@@ -55,24 +54,20 @@ function PrintReq({ onRequestSubmitted }) {
     const name = localStorage.getItem("firstName") + " " +  localStorage.getItem("lastName");
     const [giveExam, setGiveExam] = useState(false);
 
-
-    const handleFile = (e) => {
-        setFile(e.target.files[0]);
-    }
+    const handleFile = (event) => {
+        const selectedFile = event.target.files[0];
+        setFile(selectedFile);
+        setGiveExam(false); 
+    };
 
     const handleExam = () => {
-        switch(giveExam){
-            default:
-                setGiveExam(false);
-                break;
-            case true:
-                setGiveExam(false);
-                break;
-            case false:
-                setGiveExam(true);
-                break;    
+        setGiveExam(!giveExam);
+        
+        // If "Give Exam" is checked, clear the file
+        if (!giveExam) {
+            setFile(null); // Reset file if the "Give Exam" checkbox is selected
         }
-    }
+    };
 
     const handleNoOfCopies = (e) => {
         setNoOfCopies(e.target.value);
@@ -113,7 +108,6 @@ function PrintReq({ onRequestSubmitted }) {
     const [useDate, setUseDate] = useState('');
     const minDate = getMinDate();
 
-
     const handleUseDateChange = (e) => {
         const selectedDate = e.target.value;
         if (new Date(selectedDate) < new Date(minDate)) {
@@ -123,6 +117,7 @@ function PrintReq({ onRequestSubmitted }) {
             setUseDate(selectedDate);
         }
     };
+
     const upload = () => {
         // Check if the requestType is valid (not "Select")
         const isFormValid = requestType !== 'Select' && 
@@ -132,8 +127,8 @@ function PrintReq({ onRequestSubmitted }) {
                             noOfCopies > 0 && 
                             useDate !== '' &&
                             description !== '' &&
-                            (file != null || requestType === 'Exam' );  // Allow submission if file is not selected and requestType is "Exam"
-    
+                            (file != null || giveExam); 
+
         if (isFormValid) {
             const data = new FormData();
             data.append('userID', userID);
@@ -165,7 +160,7 @@ function PrintReq({ onRequestSubmitted }) {
             commentData.append("requestID", requestID);
     
             // Proceed with file upload only if file is required and provided
-            if (file && requestType !== 'Exam') {
+            if (file) {
                 setButtonSubmit(true);
                 // Sending File to Firebase Storage
                 storage.ref(`files/${file.name}`).put(file)
@@ -252,8 +247,6 @@ function PrintReq({ onRequestSubmitted }) {
             infoPop('Please make sure you filled up all the fields correctly.');
         }
     };
-    
-    
 
     const disableIn = (value) => {
 
@@ -314,14 +307,12 @@ function PrintReq({ onRequestSubmitted }) {
 
         // Disable file input if "Exam" is selected
         if (value === 'Exam') {
-            setDisable(true); // Disable all fields including file input
             setDisableCheck(false);
         } else {
             setDisable(false); // Enable fields for other request types
         }
 
     };
-    
 
     return (
             
@@ -352,12 +343,12 @@ function PrintReq({ onRequestSubmitted }) {
                     accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" 
                     className="fileinput"
                     onChange={handleFile} 
-                    disabled={disable} 
+                    disabled={giveExam} 
                 />
                     {/* <div className='fileDescL'>File Description:</div> */}
                         <textarea className='fileDesc' wrap="soft" placeholder="File Description" disabled={init} value={description} onChange={(e) => {setDescription(e.target.value)}}/>
                     <div className='givePerson'>Give examination file personally:</div>
-                        <input className='giveExam' type='checkbox' onChange={handleExam} disabled={disableCheck || init}/>
+                        <input className='giveExam' type='checkbox' onChange={handleExam} disabled={disableCheck || init || file != null}/>
 
                     <div className='contactInfo'>Requester's Information</div>
                     <div className='name'>Name</div>

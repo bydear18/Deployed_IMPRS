@@ -182,8 +182,8 @@ const History = ({reqHistory}) => {
                                             ).then((data) => { 
                                                 setComments(data);
                                                 setEditable(true);
-                                                setButtonShow('show');
-                                                setCommentShow('show');
+                                                setButtonShow('hide');
+                                                setCommentShow('hide');
                                             })
                                             .catch(error =>
                                             {
@@ -233,13 +233,7 @@ const History = ({reqHistory}) => {
                 setNoOfCopies(data['noOfCopies']);
                 setPaperSize(data['paperSize']);
                 setPaperType(data['paperType']);
-                if(college === ' '){
-                    setRole("Faculty Employee");
-                } else{
-                    setRole("Office Employee");
-                }
-                console.log(office);
-                console.log(role);
+                setRole(data['role']);
                 setUserID(data['userID']);
                 setEmail(data['requesterEmail']);
                 setDownloadURL(data['downloadURL']);
@@ -340,7 +334,27 @@ const History = ({reqHistory}) => {
                 return null;
         }
     };
-
+    const getCustomSeverityClass = (status) => {
+        switch (status) {
+            case 'Ready to Claim':
+                return 'custom-completed';
+            case 'Approved for Printing':
+                return 'custom-progress'; 
+            case 'Waiting for Approval':
+                return 'custom-pending';
+            case 'Claimed':
+                return 'custom-claimed';
+            case 'Rejected':
+                return 'custom-rejected';
+            default:
+                return 'custom-default'; 
+        }
+    };
+    
+    const renderSeverityTag = (rowData) => {
+        const severityClass = getCustomSeverityClass(rowData.status);
+        return <span className={severityClass}>{rowData.status}</span>;
+    };
     const statusBodyTemplate = (rowData) => {
         return <Tag value={rowData.status} severity={getSeverity(rowData.status)} />;
     };
@@ -400,7 +414,7 @@ const History = ({reqHistory}) => {
                     <Column field="fileName" header="File Name"></Column>
                     <Column field="requestDate" header="Request Date"></Column>
                     <Column field="useDate" header="Use Date"></Column>
-                    <Column field="status" header="Status" body={statusBodyTemplate}sortable></Column>
+                    <Column field="status" header="Status" body={renderSeverityTag}sortable></Column>
                 </DataTable>
             </div>
             <div id="overlay" className={show} onClick={closeModal}></div>

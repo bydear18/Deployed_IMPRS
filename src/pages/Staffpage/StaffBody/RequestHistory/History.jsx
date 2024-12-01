@@ -186,9 +186,9 @@ const History = ({reqHistory}) => {
               'Content-Type': 'application/json',
             },
             };
-            fetch("https://backimps-production.up.railway.app/records/completedStatus?requestID=" + requestID + "&role=" + role + "&status=Claimed&email=" + email  + "&userID=" + userID + "&date=" + currentDate, requestOptions).then((response)=> response.json()
+            fetch("https://backimps-production.up.railway.app/records/claimedStatus?requestID=" + requestID + "&role=" + role + "&status=Claimed&email=" + email  + "&userID=" + userID + "&date=" + currentDate, requestOptions).then((response)=> response.json()
             ).then((data) => {
-                showInfoPop(`Request Completed!`, true);
+                showInfoPop(`Request Claimed!`, true);
                 window.location.reload();})
             .catch(error =>
                 {
