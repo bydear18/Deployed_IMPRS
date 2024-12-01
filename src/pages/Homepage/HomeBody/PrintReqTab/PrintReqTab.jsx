@@ -249,7 +249,6 @@ function PrintReq({ onRequestSubmitted }) {
     };
 
     const disableIn = (value) => {
-
         const requestOptions = {
             method: 'GET',
             mode: 'cors',
@@ -257,63 +256,76 @@ function PrintReq({ onRequestSubmitted }) {
               'Content-Type': 'application/json',
         },
         };
-        
-        let tag = '';
-    
-        if (value === 'Module') {
+
+        var tag = '';
+
+        if (value === 'Module'){
             setRequestType('Module');
             tag = "MD0";
-        } else if (value === 'Office') {
+        }else if (value === 'Office'){
             setRequestType('Office Form');
             tag = "OF0";
-        } else if (value === 'Exam') {
+        }else if (value === 'Exam'){
             setRequestType('Exam');
             tag = "EX0";
-        } else if (value === 'Manual') {
+        }else if (value === 'Manual'){
             setRequestType('Manual');
             tag = "MA0";
         }
-    
-        console.log(role);
-        if (value !== 'Select') {
-            fetch("https://backimps-production.up.railway.app/records/generateid?fileType=" + value, requestOptions).then((response)=> response.json()
-            ).then((data) => { setRequestID(tag + (data+1).toString());})
-            .catch(error =>
-            {
-                    console.log(error);
-                });
-        } else {
+
+        if(value !== 'Select'){
+        fetch("https://backimps-production.up.railway.app/records/generateid?fileType=" + value, requestOptions).then((response)=> response.json()
+        ).then((data) => { setRequestID(tag + (data+1).toString());})
+        .catch(error =>
+        {
+            console.log(error);
+        });
+        }else{
             setRequestID("");
         }
-    
-        switch (value) {
-            case 'Module':
-            case 'Manual':
-            case 'Office':
+
+        
+
+        switch(value){
+            default:{
+                break;
+            }
+            case 'Module':{
+                setRequestType('Module');
                 setDisable(true);
                 setInit(false);
                 break;
-            case 'Exam':
+            }
+            case 'Manual':{
+                setRequestType('Manual');
+                setDisable(true);
+                setInit(false);
+                break;
+            }
+            case 'Exam':{
+                setRequestType('Exam');
                 setDisable(false);
                 setInit(false);
                 break;
-            case 'Select':
+            }
+            case 'Office':{
+                setRequestType('Office');
                 setDisable(true);
+                setInit(false);
+                break;
+            }
+            case 'Select':{
                 setInit(true);
-                break;
-            default:
-                break;
-        }
+            }
+        }  
 
-        // Disable file input if "Exam" is selected
+                // Disable file input if "Exam" is selected
         if (value === 'Exam') {
             setDisableCheck(false);
         } else {
             setDisable(false); // Enable fields for other request types
         }
-
-    };
-
+    }
     return (
             
         <div id="reqContainer">

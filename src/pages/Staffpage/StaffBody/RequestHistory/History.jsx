@@ -150,10 +150,9 @@ const History = ({reqHistory}) => {
                 }
 
     }
-
     const handleComplete = () => {
         
-        setCompleteDisable(false);
+        setCompleteDisable(true);
         const requestOptions = {
             method: 'POST',
             mode: 'cors',
@@ -174,6 +173,7 @@ const History = ({reqHistory}) => {
 
             setCompleteDisable(false);
     }
+    
     
 
     const handleClaim = () => {
