@@ -14,8 +14,24 @@ function AdminBody() {
     const [toggleState, setToggleState] = useState(1);
     const [notificationMessage, setNotificationMessage] = useState('');
     const [showNotification, setShowNotification] = useState(false);
+    const role = localStorage.getItem("role");  
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
 
     useEffect(() => {
+        // Check if the user is logged in and has the "admin" role
+
+        if(role === "head"){
+            navigate("/head");
+        } else if(role === "admin"){
+            navigate("/admin");
+        } else if(role === "staff"){
+            navigate("/staff");
+        } else{
+            navigate("/home");
+        }
+
+
+        // Fetch request to ensure the user is verified as admin
         const requestOptions = {
             method: 'GET',
             mode: 'cors',
@@ -28,21 +44,16 @@ function AdminBody() {
             .then((response) => response.json())
             .then((data) => {
                 if (data !== true) {
-                    if (localStorage.getItem("isLoggedIn") !== "true") {
-                        navigate("/");
-                    } else {
-                        navigate("/admin");
-                    }
+                    navigate("/"); // Redirect if not verified as admin
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(error);
+                navigate("/"); // Redirect in case of error during the fetch request
             });
 
         // Set up WebSocket for real-time notifications
         const ws = new WebSocket('wss://backimps-production.up.railway.app/ws/notifications');
-
-
         ws.onopen = () => console.log('Connected to WebSocket for notifications');
         ws.onmessage = (event) => {
             const message = event.data;
@@ -57,7 +68,7 @@ function AdminBody() {
         ws.onclose = () => console.log('Disconnected from WebSocket');
 
         return () => ws.close();
-    }, [navigate]);
+    }, [navigate, isLoggedIn, role]);
 
     const toggleTab = (index) => {
         setToggleState(index);

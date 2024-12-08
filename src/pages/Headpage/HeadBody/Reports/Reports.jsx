@@ -246,7 +246,7 @@ useEffect(() => {
         ],
         backgroundColor: [
           '#c13e90',
-          'rgb(240, 158, 34))',
+          'rgb(240, 158, 34)',
           '#1672d4',
           'rgb(36, 235, 136)',
           'yellow',

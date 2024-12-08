@@ -15,8 +15,8 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoggedIn, setLoggedIn] = useState(false);
-    const [alert, setAlert] = useState('hide'); // controls the visibility of the pop-up
-    const [alertMsg, setAlertMsg] = useState(''); // stores the message to be displayed
+    const [alert, setAlert] = useState('hide'); 
+    const [alertMsg, setAlertMsg] = useState('');
     const navigate = useNavigate();
 
     // Info pop-up message display function

@@ -15,13 +15,20 @@ import RequestHistory from './RequestHistory/History';
 import SystemReport from './Reports/Reports';
 function HomeBody () {
     const navigate = useNavigate()
+    const role = localStorage.getItem("role");  
 
     useEffect(() => {
-        if(localStorage.getItem("isLoggedIn")!=="true"){
-            navigate("/");
+
+        if(role === "head"){
+            navigate("/head");
+        } else if(role === "admin"){
+            navigate("/admin");
+        } else if(role === "staff"){
+            navigate("/staff");
+        } else{
+            navigate("/home");
         }
     });
-
     const [toggleState, setToggleState] = useState(1);
 
         const toggleTab = (index) => {
